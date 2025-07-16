@@ -1,0 +1,661 @@
+[
+    {
+      "description": "Reads a file or image from the web.\nFor pdf files, use the `save_web_files` tool to download and `pdf_convert` tool to convert to markdown.\nFor image files, the tool will display the image for you.\nUse this tool to read files and images from the web. e.g. openapi.json, favicon.ico, image.png\nFor website cannot be read directly, use the `visit_webpage` tool to read.\n",
+      "name": "view_web_file",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "description": "URL of the web resource to view",
+            "type": "string"
+          }
+        },
+        "required": ["url"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Take screenshot of a web page and capture JavaScript console logs/errors for comprehensive debugging analysis.\n\nCONSOLE LOG ANALYSIS CAPABILITIES:\nThis tool automatically monitors and captures console messages with intelligent filtering:\n- ERROR messages: All captured (highest priority - analyze these first for critical issues)\n- WARN messages: Up to 200 captured (important for identifying potential problems)\n- INFO messages: Up to 100 captured (provides context and application flow)\n- LOG messages: Up to 50 captured (debugging information and application state)\n- DEBUG messages: Filtered out (too verbose for analysis)\n\nWHAT YOU WILL RECEIVE:\n- Screenshot image for visual analysis\n- Structured console data including:\n  * Message type, content, and timestamp\n  * File location (URL, line number, column number)\n  * Message count information (e.g., 'showing 50 of 150 log messages')\n  * JavaScript errors with full stack traces\n  * Network errors and failed requests\n\nHOW TO ANALYZE:\n1. First examine ERROR messages - these indicate critical JavaScript failures\n2. Review WARN messages for potential issues and deprecated usage\n3. Use INFO/LOG messages to understand application flow and state\n4. Correlate console errors with visual issues in the screenshot\n5. Provide specific fixes with file locations and line numbers when available\n\nUSAGE OPTIONS:\n- capture_console=True (default): Full debugging analysis with console monitoring\n- capture_console=False: Screenshot only for visual inspection\n\nINTELLIGENT WAIT TIME ADJUSTMENT:\nAnalyze the webpage content and adjust wait_time parameter accordingly:\n- **Loading indicators present**: Increase wait_time to 3000-5000ms to capture post-load console activity\n- **API calls or async operations**: Use 5000-10000ms for complex data loading\n- **Simple static content**: Reduce to 500-1000ms for faster screenshots\n- **Real-time features**: Use 2000-3000ms to capture initial activity\n- **Error debugging**: Increase wait_time when console errors appear after initial load\n\nFor images, use `save_web_files` tool instead. Set viewport_width (e.g. 375) for mobile simulation.\nScreenshots and detailed console analysis data will be available in the user message for your review.",
+      "name": "screenshot_playwright",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "capture_console": {
+            "description": "Whether to capture JavaScript console logs and errors for debugging analysis",
+            "type": "boolean"
+          },
+          "path": {
+            "description": "URL of the web page or local html to take a screenshot of.\n- For local html: `file:///path/to/file.html` or a relative path to a local HTML file\n- For web page: `https://example.com`\n",
+            "type": "string"
+          },
+          "viewport_width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set viewport width in pixels to simulate mobile devices (e.g. 375 for iPhone SE)"
+          },
+          "wait_time": {
+            "description": "Time to wait in milliseconds after page load before taking screenshot (allows console logs to appear)",
+            "type": "integer"
+          }
+        },
+        "required": ["path"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Turn websites into Markdown format data.\nUse this tool to understand the content of a website.\nIf the url is a file, use the `view_web_file` tool to read it.\n\nIMPORTANT: Use full http url, e.g. https://example.com\n",
+      "name": "visit_webpage",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "description": "URL of the web page to read. e.g. https://example.com",
+            "type": "string"
+          }
+        },
+        "required": ["url"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Search high-quality stock images from Pixabay. This tool is ideal for finding professional stock photos, illustrations, and graphics for landing pages, websites, presentations, and general design work. Pixabay offers royalty-free images with commercial usage rights.\n\nBest for:\n- High-quality stock photography and illustrations\n- Landing page design elements\n- Website backgrounds and hero images\n- General design and marketing materials\n- Abstract concepts and artistic content\n- Generic visual representations rather than specific entities\n\nNOTE: For specific characters, celebrities, movie scenes, or precise real-world references, consider using search_image_rapidapi instead.\n",
+      "name": "search_image",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "description": "A search term describing the desired image. Maximum 100 characters. Example: \"business team\", \"nature landscape\", \"technology abstract\"",
+            "type": "string"
+          }
+        },
+        "required": ["query"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Search real-time images from the internet via RapidAPI. This tool provides high-precision search results similar to Google Images, making it excellent for finding specific real-world information, current events, and accurate visual references.\n\nBest for:\n- Celebrity photos and public figures\n- Movie and fictional characters (e.g., Harry Potter, Marvel heroes)\n- Current events and news-related images\n- Specific products, brands, or locations\n- Real-world objects and entities\n- Precise visual references for specific topics\n- Recent or trending content\n\nPRIORITY USE: This tool should be your first choice when searching for specific characters, people, or entities where accuracy and recognizability are important.\n\nUSAGE TIPS:\n- For character searches, focus on finding recognizable and representative images\n- For products or detailed objects, consider using higher quality settings\n- Adjust the limit parameter to get more options when needed\n",
+      "name": "search_image_rapidapi",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "description": "Maximum number of results to return.",
+            "type": "integer"
+          },
+          "query": {
+            "description": "The search query / keywords.",
+            "type": "string"
+          },
+          "size": {
+            "description": "The size of the image. Should be one of `any`, `large`, `medium`, `icon`, `400x300_and_more`, `640x480_and_more`, `800x600_and_more`, `1024x768_and_more`, `2mp_and_more`, `4mp_and_more`, `6mp_and_more`, `8mp_and_more`, `10mp_and_more`, `12mp_and_more`, `15mp_and_more`, `20mp_and_more`, `40mp_and_more`, `70mp_and_more`",
+            "type": "string"
+          }
+        },
+        "required": ["query"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Downloads files from the web (HTML, images, documents, etc.) and saves them to the specified path.\nSupports various file types including HTML, PNG, JPEG, PDF, and more.\nOnly use this tool if you need to download files from the internet.\n\nIMPORTANT:\n- For PDF, you must provide the `save_dir` parameter to save the file locally\n- For images and videos, you can omit the `save_dir` parameter and set `upload_to_cdn=True` to directly upload to CDN without saving locally\n- When downloading multimedia files (images, videos, etc.) for web pages, always upload them to a CDN and use the returned `cdn_url`\n- The `save_dir` parameter is optional - if not provided, files will only be uploaded to CDN and not saved locally\n- Use `visit_webpage` tool if you need to read web pages.\n- Use `view_web_file` if you want to view files from the internet directly.\n",
+      "name": "save_web_files",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "save_dir": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional directory where the file should be saved locally. Can be omitted when downloading files as they will be uploaded to CDN and can be accessed directly via the returned cdn_url"
+          },
+          "upload_to_cdn": {
+            "description": "Upload the files to the CDN",
+            "type": "boolean"
+          },
+          "urls": {
+            "description": "List of URLs to download",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["urls"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Performs web searches using Tavily.\nIf the initial query is too broad or results are not ideal, the LLM can refine the search by progressively reducing keywords to improve accuracy.\nUseful for retrieving up-to-date information, specific data, or detailed background research.\n",
+      "name": "search_with_tavily",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "description": "The search query",
+            "type": "string"
+          },
+          "search_deep": {
+            "description": "The search depth",
+            "enum": ["basic", "advanced"],
+            "type": "string"
+          },
+          "time_range": {
+            "anyOf": [
+              {
+                "enum": ["day", "week", "month", "year", "d", "w", "m", "y"],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The time range"
+          },
+          "topic": {
+            "description": "The topic",
+            "enum": ["general", "news"],
+            "type": "string"
+          }
+        },
+        "required": ["query"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Performs web searches using Google. If the initial query is too broad or results are not ideal, the LLM can refine the search by progressively reducing keywords to improve accuracy.\nUseful for retrieving up-to-date information, specific data, or detailed background research.\n",
+      "name": "search_with_google",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "num": {
+            "description": "The number of results to return, from 1 to 10",
+            "type": "integer"
+          },
+          "query": {
+            "description": "The search query",
+            "type": "string"
+          },
+          "start": {
+            "description": "The start index, as defaule num=10, start=11 for page 2",
+            "type": "integer"
+          }
+        },
+        "required": ["query"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "JSON validation tool that checks if a JSON file or string is valid\n- Validates JSON files by file path\n- Validates JSON strings directly\n- Returns detailed error information for invalid JSON\n- Supports both file validation and string validation\n- Use this tool to ensure JSON data integrity before processing\n",
+      "name": "validate_json",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "file_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Relative path to JSON file to validate"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "description": "- Fast content search tool that works with any codebase size\n- Searches file contents using regular expressions\n- Supports full regex syntax (eg. \"log.*Error\", \"function\\s+\\w+\", etc.)\n- Filter files by pattern with the include parameter (eg. \"*.js\", \"*.{ts,tsx}\")\n- Returns matching file paths sorted by modification time\n- Built-in size limitations to prevent overwhelming results (configurable via parameters)\n- Default limits: 100 total matches, 20 matches per file, 50 files searched\n- Use this tool when you need to find files containing specific patterns\n- When you are doing an open ended search that may require multiple rounds of globbing and grepping, use the Agent tool instead\n",
+      "name": "grep_tool",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "context_lines": {
+            "description": "Number of context lines to include before and after matches",
+            "type": "integer"
+          },
+          "include": {
+            "description": "Optional glob pattern to filter files",
+            "type": "string"
+          },
+          "max_files": {
+            "description": "Maximum number of files to search (default: 50, set -1 for unlimited)",
+            "type": "integer"
+          },
+          "max_matches_per_file": {
+            "description": "Maximum matches per file (default: 20, set -1 for unlimited)",
+            "type": "integer"
+          },
+          "max_results": {
+            "description": "Maximum number of total matches to return (default: 100, set -1 for unlimited)",
+            "type": "integer"
+          },
+          "pattern": {
+            "description": "Regular expression pattern to search for",
+            "type": "string"
+          }
+        },
+        "required": ["pattern"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "- Fast file pattern matching tool that works with any codebase size\n- Supports glob patterns like \"**/*.js\" or \"src/**/*.ts\"\n- Returns matching file paths sorted by modification time\n- Use this tool when you need to find files by name patterns\n- When you are doing an open ended search that may require multiple rounds of globbing and grepping, use the Agent tool instead\n",
+      "name": "glob_tool",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "pattern": {
+            "description": "Glob pattern to match files (e.g. '**/*.py')",
+            "type": "string"
+          }
+        },
+        "required": ["pattern"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Lists files and directories in a given path. The path parameter should be a relative path. You should generally prefer the Glob and Grep tools, if you know which directories to search",
+      "name": "ls",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "ignore": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "List of glob patterns to ignore"
+          },
+          "path": {
+            "description": "Directory path",
+            "type": "string"
+          }
+        },
+        "required": ["path"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Reads a file from the local filesystem. Support for text, image, audio and video files.The file_path parameter should be a relative path. By default, it reads up to 2000 lines starting from the beginning of the file. You can optionally specify a line offset and limit (especially handy for long files), but it's recommended to read the whole file by not providing these parameters. Any lines longer than 2000 characters will be truncated. For image audio and video files, the tool will display the file for you. For pdf file, use `pdf_convert` tool to convert it to markdown. ",
+      "name": "view",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "file_path": {
+            "description": "Relative path to the file to read",
+            "type": "string"
+          },
+          "line_limit": {
+            "description": "Maximum number of lines to read",
+            "type": "integer"
+          },
+          "line_offset": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Line number to start reading from (0-indexed)"
+          }
+        },
+        "required": ["file_path"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "This is a tool for editing. For moving or renaming files, you should generally use the `move` tool instead. For larger edits, use the `replace` tool to overwrite files.\n\nBefore using this tool:\n\n1. Use the `view` tool to understand the file's contents and context.\n2. Verify the directory path is correct (only applicable when creating new files):\n    - Use the LS tool to verify the parent directory exists and is the correct location.\n\nTo make a file edit, provide the following:\n1. file_path: The relative path to the file to modify.\n2. old_string: The text to replace (must be unique within the file, and must match the file contents exactly, including all whitespace and indentation).\n3. new_string: The edited text to replace the old_string.\n\nThe tool will replace ONE occurrence of old_string with new_string in the specified file.\n\nCRITICAL REQUIREMENTS FOR USING THIS TOOL:\n\n1. UNIQUENESS: The old_string MUST uniquely identify the specific instance you want to change. This means:\n    - Include AT LEAST 3-5 lines of context BEFORE the change point.\n    - Include AT LEAST 3-5 lines of context AFTER the change point.\n    - Include all whitespace, indentation, and surrounding code exactly as it appears in the file.\n\n2. SINGLE INSTANCE: This tool can only change ONE instance at a time. If you need to change multiple instances:\n    - Make separate calls to this tool for each instance.\n    - Each call must uniquely identify its specific instance using extensive context.\n\n3. VERIFICATION: Before using this tool:\n    - Check how many instances of the target text exist in the file.\n    - If multiple instances exist, gather enough context to uniquely identify each one.\n    - Plan separate tool calls for each instance.\n\nWARNING: If you do not follow these requirements:\n    - The tool will fail if old_string matches multiple locations.\n    - The tool will fail if old_string doesn't match exactly (including whitespace).\n    - You may change the wrong instance if you don't include enough context.\n\nWhen making edits:\n    - Ensure the edit results in idiomatic, correct code.\n    - Do not leave the code in a broken state.\n    - Always use relative file paths.\n\nIf you want to create a new file, use:\n    - A new file path, including dir name if needed.\n    - An empty old_string.\n    - The new file's contents as new_string.\n\nRemember: when making multiple file edits in a row to the same file, you should prefer to send all edits in a single message with multiple calls to this tool, rather than multiple messages with a single call each.\n",
+      "name": "edit",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "file_path": {
+            "description": "Relative path to the file to edit",
+            "type": "string"
+          },
+          "new_string": {
+            "description": "New text to replace the old text with",
+            "type": "string"
+          },
+          "old_string": {
+            "description": "Text to replace (must be unique within the file)",
+            "type": "string"
+          }
+        },
+        "required": ["file_path", "old_string", "new_string"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "This is a tool for writing content to a file in the local filesystem, `replace` means to replace the entire content of the file. For smaller changes, use the `edit` tool to repalce specific text.\n\n- Use `file_path` to specify the relative path to the file to write and `content` to specify the content to write to the file.\n- For new files or overwriting existing files, use `mode=\"w\"` (default)\n- For appending to existing files, use `mode=\"a\"`\n- No other mode values are supported\n\nIMPORTANT: Limit content to a maximum of 200 lines per call to avoid network failures or token limit issues. If the file is larger, use this tool multiple times with smaller chunks of content.\n\nBefore using this tool:\n\n1. Use the `view` tool to understand the file's contents and context.\n\n2. Directory Verification (only applicable when creating new files):\n    - Use the `ls` tool to verify the parent directory exists and is the correct location.\n\nNote: If errors occur during file operations, the tool will return an error message explaining what went wrong.\n",
+      "name": "replace",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "description": "Content to write to the file",
+            "type": "string"
+          },
+          "file_path": {
+            "description": "Relative path to the file to write",
+            "type": "string"
+          },
+          "mode": {
+            "description": "File mode: 'w' for write/overwrite (default) or 'a' for append",
+            "type": "string"
+          }
+        },
+        "required": ["file_path", "content"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Creates new directories safely within the current working directory.\n\n#### **Features**\n- Creates new directories and nested directories\n- Ensures operations stay within the working directory for safety\n- Returns detailed status information\n\n#### **Safe Operations**\n- Prevents operations outside the working directory\n- Validates paths to ensure they're within the allowed scope\n- Provides clear error messages for invalid operations\n\n#### **Usage Guidelines**\n- Provide absolute or relative paths (relative paths resolve from current working directory)\n- Set `parents=True` to create intermediate directories as needed\n- `exist_ok=True` prevents errors if directory already exists\n\n## NOTICE\nDO NOT MKDIR SUBFOLDER TO COTAIN THE WHOLE WEBSITE IN WORKING DIR\nTHE TOOL IS ONLY FOR MKDIR FOR ASSETS (css/js/images et al.)\nMAKE SURE THE ENTRYPOINT IS IN WORKING DIR\n",
+      "name": "mkdir",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "exist_ok": {
+            "description": "Prevent errors if directory already exists",
+            "type": "boolean"
+          },
+          "parents": {
+            "description": "Create intermediate directories as needed",
+            "type": "boolean"
+          },
+          "path": {
+            "description": "Path to create",
+            "type": "string"
+          }
+        },
+        "required": ["path"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Moves a file or directory safely within the current working directory.",
+      "name": "move",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "destination_path": {
+            "description": "Path to the new location for the file or directory",
+            "type": "string"
+          },
+          "source_path": {
+            "description": "Path to the file or directory to move",
+            "type": "string"
+          }
+        },
+        "required": ["source_path", "destination_path"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Use this tool to read the current to-do list for the session. This tool should be used proactively and frequently to ensure that you are aware of\nthe status of the current task list. You should make use of this tool as often as possible, especially in the following situations:\n- At the beginning of conversations to see what's pending\n- Before starting new tasks to prioritize work\n- When the user asks about previous tasks or plans\n- Whenever you're uncertain about what to do next\n- After completing tasks to update your understanding of remaining work\n- After every few messages to ensure you're on track\n\nUsage:\n- This tool takes in no parameters. So leave the input blank or empty. DO NOT include a dummy object, placeholder string or a key like \"input\" or \"empty\". LEAVE IT BLANK.\n- Returns a beautifully formatted list of todo items with emoji status indicators, priority grouping, and progress statistics\n- Use this information to track progress and plan next steps\n- If no todos exist yet, a helpful empty state message will be returned\n",
+      "name": "todo_read",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "description": "Use this tool to create and manage a structured task list for your current coding session. This helps you track progress, organize complex tasks, and demonstrate thoroughness to the user.\nIt also helps the user understand the progress of the task and overall progress of their requests.\n\n## Parameter Usage\nWhen calling this tool, use the parameter name 'todos' with a list of TodoItem objects.\n\n## When to Use This Tool\nUse this tool proactively in these scenarios:\n\n1. **Complex multi-step tasks** - When a task requires 3 or more distinct steps or actions\n2. **Non-trivial and complex tasks** - Tasks that require careful planning or multiple operations\n3. **User explicitly requests todo list** - When the user directly asks you to use the todo list\n4. **User provides multiple tasks** - When users provide a list of things to be done (numbered or comma-separated)\n5. **After receiving new instructions** - Immediately capture user requirements as todos. Feel free to edit the todo list based on new information.\n6. **After completing a task** - Mark it complete and add any new follow-up tasks\n7. **When you start working on a new task** - Mark the todo as in_progress. Ideally you should only have one todo as in_progress at a time. Complete existing tasks before starting new ones.\n\n## When NOT to Use This Tool\n\nSkip using this tool when:\n1. There is only a single, straightforward task\n2. The task is trivial and tracking it provides no organizational benefit\n3. The task can be completed in less than 3 trivial steps\n4. The task is purely conversational or informational\n\nNOTE that you should not use this tool if there is only one trivial task to do. In this case you are better off just doing the task directly.\n\n## Task States and Management\n\n1. **Task States**: Use these states to track progress:\n   - **pending** ⏳: Task not yet started\n   - **in_progress** 🔄: Currently working on (limit to ONE task at a time)\n   - **completed** ✅: Task finished successfully\n\n2. **Task Management Best Practices**:\n   - Update task status in real-time as you work\n   - Mark tasks complete IMMEDIATELY after finishing (don't batch completions)\n   - Only have ONE task in_progress at any time\n   - Complete current tasks before starting new ones\n   - Use descriptive IDs that are easy to reference (e.g., TASK-001, UI-REFACTOR-01)\n\n3. **Priority Levels**:\n   - **high** 🔴: Critical tasks that block other work\n   - **medium** 🟡: Important but not blocking\n   - **low** 🟢: Nice to have, can be done later\n\n4. **Task Breakdown**:\n   - Create specific, actionable items\n   - Break complex tasks into smaller, manageable steps\n   - Use clear, descriptive task names that explain what needs to be done\n\n5. **Language**:\n   - Use the same language as the user is using\n\nWhen in doubt, use this tool. Being proactive with task management demonstrates attentiveness and ensures you complete all requirements successfully.\n",
+      "name": "todo_write",
+      "parameters": {
+        "$defs": {
+          "TodoItem": {
+            "properties": {
+              "content": {
+                "description": "The content of the todo item.",
+                "type": "string"
+              },
+              "id": {
+                "description": "The unique identifier for the todo item.",
+                "type": "string"
+              },
+              "priority": {
+                "description": "The priority of the todo item.",
+                "enum": ["high", "medium", "low"],
+                "type": "string"
+              },
+              "status": {
+                "description": "The status of the todo item.",
+                "enum": ["pending", "in_progress", "completed"],
+                "type": "string"
+              }
+            },
+            "required": ["id", "content", "status", "priority"],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "todos": {
+            "description": "The updated todo list.",
+            "items": {
+              "$ref": "#/$defs/TodoItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["todos"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Use the tool to think about something. It will not obtain new information or change the database, but just append the thought to the log. Use it when complex reasoning or some cache memory is needed. For task planning and management, use the todo tool instead.",
+      "name": "thinking",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "thought": {
+            "description": "A thought to think or plan about. In markdown format. Use the same language as the user.",
+            "type": "string"
+          }
+        },
+        "required": ["thought"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Use this tool to communicate key decisions and plans with the user. This tool provides transparency about your thought process and upcoming actions.\n\nIMPORTANT: This tool is for EXTERNAL communication with the user, complementing the 'thinking' and 'todo' tools.\n- Use 'thinking' for internal reasoning\n- Use 'todo' for task planning and tracking\n- Use 'talk' for communicating decisions and progress\n\n## When to Use This Tool\n\nUse this tool selectively at important decision points:\n\n1. **Before significant file modifications** - Explain what file you're modifying and why\n2. **Before executing impactful commands** - Describe what the command will do\n3. **When changing approach** - Explain why you're switching strategies\n4. **When encountering issues** - Explain problems found and solutions\n5. **At major milestones** - Provide brief progress updates\n\n## Best Practices\n\n- Be concise and informative - aim for 1-2 sentences\n- Focus on what you're about to do, not what you've already done\n- Never repeat the same message twice\n- Use clear, non-technical language when possible\n- Complement with 'todo' tool for detailed task planning\n\n## Examples\n\n- \"I'll add OAuth support to config.js now to enable social login functionality.\"\n- \"I've found the authentication bug. I'll fix the timeout issue in auth.js.\"\n- \"The API integration approach needs to change. I'll use webhooks instead of polling.\"\n\nIMPORTANT: Each talk message should provide new, unique information. Never repeat the same message.\n",
+      "name": "talk",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "description": "The message to communicate to the user about your plans or current thinking",
+            "type": "string"
+          }
+        },
+        "required": ["message"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Converts a PDF file to markdown format via pymupdf4llm. See [pymupdf.readthedocs.io/en/latest/pymupdf4llm](https://pymupdf.readthedocs.io/en/latest/pymupdf4llm/) for more. The `file_path`, `image_path`, and `save_path` parameters should be the relative path to the PDF file. This tool will also convert the PDF to images and save them in the `image_path` directory. For larger PDF files, use `save_path` to save the markdown file then read it partially. ",
+      "name": "pdf_convert",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "file_path": {
+            "description": "Relative path to the PDF file to convert",
+            "type": "string"
+          },
+          "image_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional. Relative path to the directory to save the images. If not provided, the images will be saved in the same directory as the PDF file."
+          },
+          "save_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional. Relative path to the directory to save the markdown file. If provided, will return the path to the markdown file. If not provided, will return the markdown string."
+          }
+        },
+        "required": ["file_path"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Converts Office documents (Word, PowerPoint, Excel) and EPub files to markdown format using MarkItDown. Supports .docx, .doc, .ppt, .pptx, .xls, .xlsx, and .epub file formats. This tool is specifically designed for Office documents and electronic books - use the separate PDF tool for PDF files. The `file_path` and `save_path` parameters should be relative paths. For larger documents, use `save_path` to save the markdown file then read it partially to avoid response truncation. Returns either the markdown content directly or the path to the saved markdown file.",
+      "name": "office_to_markdown",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "file_path": {
+            "description": "Relative path to the office(.docx, .doc, .ppt, .pptx, .xls, .xlsx) or EPub(.epub) file to convert",
+            "type": "string"
+          },
+          "image_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional. Relative path to the directory to save the images. If not provided, the images will be saved in the same directory as the PDF file."
+          },
+          "save_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional. Relative path to the directory to save the markdown file. If provided, will return the path to the markdown file. If not provided, will return the markdown string."
+          }
+        },
+        "required": ["file_path"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Search for papers on arXiv with advanced filtering.\n\nProvide a search query and optionally specify:\n- Maximum number of results to return\n- Date range (from and to)\n- Categories to filter by\n\nReturns a list of papers matching the search criteria.\n\nFor download pdf, use `save_web_files` tool.\n",
+      "name": "arxiv__arxivsearch",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "categories": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "List of arXiv categories to filter by"
+          },
+          "date_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Start date for filtering (YYYY-MM-DD)"
+          },
+          "date_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "End date for filtering (YYYY-MM-DD)"
+          },
+          "max_result": {
+            "description": "Maximum number of results to return",
+            "type": "integer"
+          },
+          "query": {
+            "description": "The search query",
+            "type": "string"
+          }
+        },
+        "required": ["query"],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Use this tool when you are done. Summarize the conversation and return the final result.",
+      "name": "task_complete",
+      "parameters": {
+        "properties": {
+          "call_to_action": {
+            "anyOf": [
+              {
+                "enum": ["history", "mcp-marketplace", "setting", "download", "console"],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Call to action for the user, options are: 'history', 'mcp-marketplace', 'setting', 'download' 'console'."
+          },
+          "commit_message": {
+            "description": "Commit message to be pushed, not shown to the user.",
+            "type": "string"
+          },
+          "followup_question": {
+            "description": "Followup question to be sent to the user. In markdown format.",
+            "type": "string"
+          },
+          "reply": {
+            "description": "Reply to the user. Summary of the changes or response to the user's request, no ask questions. In markdown format.",
+            "type": "string"
+          }
+        },
+        "required": ["reply", "followup_question", "commit_message"],
+        "type": "object"
+      }
+    }
+  ]
